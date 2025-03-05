@@ -51,7 +51,8 @@ class button():
         screen.blit(text_surface, (self.x + self.width/2 - text_surface.get_width()/2, self.y + self.height/2 - text_surface.get_height()/2))
 
 class enemy():
-    pass
+    #def __init__()
+    pass 
 class tile_b():
     def __init__(self, x, y, tile):
         self.x = x
