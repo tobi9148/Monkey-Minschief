@@ -50,6 +50,8 @@ class button():
         text_surface = a_font.render(self.text, False, (self.text_color))
         screen.blit(text_surface, (self.x + self.width/2 - text_surface.get_width()/2, self.y + self.height/2 - text_surface.get_height()/2))
 
+class enemy():
+    pass
 class tile_b():
     def __init__(self, x, y, tile):
         self.x = x
