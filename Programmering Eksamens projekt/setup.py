@@ -24,6 +24,9 @@ def mage():
     return {"class": "mage", "color": (0, 0, 255), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
+class test:
+    pass
+
 class scene_template:
     def event_handler(self, event):
         pass
