@@ -10,3 +10,5 @@ class Enemy(object):
         self.skills = skills
         self.attack = attack
         self.expget = expget
+    def move(self):
+        pass
