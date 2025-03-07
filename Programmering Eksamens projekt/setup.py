@@ -8,7 +8,7 @@ pygame.display.set_caption("Monkey Mischief") #I den her linje sætter vi titlen
 
 fps = 120 #Vi laver er variabel som vil bestemme hvor mange frames vores spil skal køre med
 
-a_font = pygame.font.Font("fonts\Grand9K Pixel.ttf", 20) #Her laver vi en font som vi kan bruge til at skrive tekst
+a_font = pygame.font.Font("Programmering Eksamens projekt/fonts/Grand9K Pixel.ttf", 20) #Her laver vi en font som vi kan bruge til at skrive tekst
 
 player_size = 8*3
 
@@ -59,7 +59,7 @@ class tile_b():
         self.y = y
         self.width = 8*4
         self.height = 8*4
-        self.tile = f"sprites/tiles/{tile}.png"
+        self.tile = f"Programmering Eksamens projekt/sprites/tiles/{tile}.png"
     
     def draw(self, screen):
         sprite = pygame.image.load(self.tile)
@@ -173,9 +173,6 @@ class level0_scene(scene_template):
         edge = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(720/2), screen.get_height()/2-(480/2), 720, 480), 1)
         side_increments = int(edge.height/24)
         top_bottom_increments = edge.width/24
-
-        for i in range(24):
-            print(i+1)
 
         for tile in tile_left:
             tile.draw(screen)
