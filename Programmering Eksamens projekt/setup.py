@@ -57,7 +57,6 @@ class button():
 class enemy():
     #def __init__()
     pass 
-
 class tile_b():
     def __init__(self, x, y, tile):
         self.x = x
@@ -232,7 +231,7 @@ class level1_scene(scene_template):
         for tile in tile_left:
             tile.draw(screen)
 
-        for plr in self.player:
+        for plr in self.player: #Her tegnes playeren på banen
             pygame.draw.rect(screen, (plr["color"]), plr["rect"])
         
         text_surface_fps = a_font.render(f"fps: {pygame.time.Clock.get_fps(clock):.0f}", False, (255, 255, 255))
