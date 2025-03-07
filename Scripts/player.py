@@ -1,6 +1,7 @@
 import pygame #Her importerer vi pygame
 import math #Her importerer vi math
 import setup
+from setup import screen
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 player_size = 8*3
