@@ -11,22 +11,23 @@ fps = 120 #Vi laver er variabel som vil bestemme hvor mange frames vores spil sk
 a_font = pygame.font.Font("Programmering Eksamens projekt/fonts/Grand9K Pixel.ttf", 20) #Her laver vi en font som vi kan bruge til at skrive tekst
 
 player_size = 8*3
+player_speed = 0.5
 
 def warrior():
     return {"class": "warrior", 
-            "health" : 100,
+            "health" : 20,
             "color": (255, 0, 0), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
 def archer():
     return {"class": "archer", 
-            "health" : 100,
+            "health" : 20,
             "color": (0, 255, 0), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
 def mage():
     return {"class": "mage", 
-            "health" : 100,
+            "health" : 20,
             "color": (0, 0, 255), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
@@ -152,6 +153,56 @@ class lobby_scene(scene_template):
         screen.blit(text_surface_resolution, (0, 690))
 
 class level0_scene(scene_template):
+    def __init__(self):
+        self.player = []
+        self.player.append(selected_class)
+        print(self.player)
+        self.edge = None
+
+    def event_handler(self, events):
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if pygame.KEYDOWN == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.player[0]["rect"] = (self.player[0]["rect"][0], self.player[0]["rect"][1]-player_speed, self.player[0]["rect"][2], self.player[0]["rect"][3])
+                if event.key == pygame.K_s:
+                    self.player[0]["rect"] = (self.player[0]["rect"][0], self.player[0]["rect"][1]+player_speed, self.player[0]["rect"][2], self.player[0]["rect"][3])
+                if event.key == pygame.K_a:
+                    self.player[0]["rect"] = (self.player[0]["rect"][0]-player_speed, self.player[0]["rect"][1], self.player[0]["rect"][2], self.player[0]["rect"][3])
+                if event.key == pygame.K_d:
+                    self.player[0]["rect"] = (self.player[0]["rect"][0]+player_speed, self.player[0]["rect"][1], self.player[0]["rect"][2], self.player[0]["rect"][3])
+        if pygame.key.get_pressed()[pygame.K_x]:
+            return death_scene()
+        return self
+    
+    def update(self):
+        pass
+
+    def render(self, screen):
+        screen.fill((0, 0, 0))
+
+        tile_left = [tile_b(50, 0, "green_brick_l")]
+
+        edge = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(720/2), screen.get_height()/2-(480/2), 720, 480), 1)
+        side_increments = int(edge.height/24)
+        top_bottom_increments = edge.width/24
+
+        for tile in tile_left:
+            tile.draw(screen)
+
+        for plr in self.player:
+            pygame.draw.rect(screen, (plr["color"]), plr["rect"])
+        
+        text_surface_fps = a_font.render(f"fps: {pygame.time.Clock.get_fps(clock):.0f}", False, (255, 255, 255))
+        screen.blit(text_surface_fps, (0, 630))
+        text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
+        screen.blit(text_surface_mouse_pos, (0, 660))
+        text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
+        screen.blit(text_surface_resolution, (0, 690))
+
+class level1_scene(scene_template):
     def __init__(self):
         self.player = []
         self.player.append(selected_class)
