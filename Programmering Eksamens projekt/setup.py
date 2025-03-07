@@ -13,19 +13,22 @@ a_font = pygame.font.Font("Programmering Eksamens projekt/fonts/Grand9K Pixel.tt
 player_size = 8*3
 
 def warrior():
-    return {"class": "warrior", "color": (255, 0, 0), 
+    return {"class": "warrior", 
+            "health" : 100,
+            "color": (255, 0, 0), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
 def archer():
-    return {"class": "archer", "color": (0, 255, 0), 
+    return {"class": "archer", 
+            "health" : 100,
+            "color": (0, 255, 0), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
 
 def mage():
-    return {"class": "mage", "color": (0, 0, 255), 
+    return {"class": "mage", 
+            "health" : 100,
+            "color": (0, 0, 255), 
             "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
-
-class test:
-    pass
 
 class scene_template:
     def event_handler(self, event):
@@ -53,6 +56,7 @@ class button():
 class enemy():
     #def __init__()
     pass 
+
 class tile_b():
     def __init__(self, x, y, tile):
         self.x = x
@@ -186,7 +190,6 @@ class level0_scene(scene_template):
         screen.blit(text_surface_mouse_pos, (0, 660))
         text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
         screen.blit(text_surface_resolution, (0, 690))
-
 
 class death_scene(scene_template):
     def event_handler(self, events):
