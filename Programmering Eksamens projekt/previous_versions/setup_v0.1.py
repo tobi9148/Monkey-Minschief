@@ -65,4 +65,21 @@ while running:  #Her begynder loopet som kører spillet
     pygame.display.flip() #Her opdaterer vi skærmen
     clock.tick(fps) #Her sætter vi vores frames til 60
 
+    def warrior():
+        return {"class": "warrior", 
+            "health" : 20,
+            "color": (255, 0, 0), 
+            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
+
+    def archer():
+        return {"class": "archer", 
+            "health" : 20,
+            "color": (0, 255, 0), 
+            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
+
+    def mage():
+        return {"class": "mage", 
+            "health" : 20,
+            "color": (0, 0, 255), 
+            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
     

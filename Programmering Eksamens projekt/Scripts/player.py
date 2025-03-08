@@ -14,6 +14,18 @@ class player_class(object):
         self.rect = pygame.rect.Rect(screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)
         self.speed = player_speed
     
+    @classmethod
+    def warrior(cls):
+        return cls("warrior", 20, 5, (255, 0, 0))
+
+    @classmethod
+    def archer(cls):
+        return cls("archer", 15, 10, (0, 255, 0))
+    
+    @classmethod
+    def mage(cls):
+        return cls("mage", 10, 15, (0, 0, 255))
+    
     def player_movement(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
