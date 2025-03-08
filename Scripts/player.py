@@ -1,11 +1,42 @@
 import pygame #Her importerer vi pygame
-import math #Her importerer vi math
-import setup
-from setup import screen
+from config import screen
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 player_size = 8*3
-player_speed = 0.5
+player_speed = 1
+
+class player_class(object):
+    def __init__(self, player_class, health, damage, color):
+        self.player_class = player_class
+        self.health = health
+        self.damage = damage
+        self.color = color
+        self.rect = pygame.rect.Rect(screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)
+        self.speed = player_speed
+    
+    def player_movement(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            self.rect.y -= self.speed
+        if keys[pygame.K_s]:
+            self.rect.y += self.speed
+        if keys[pygame.K_a]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_d]:
+            self.rect.x += self.speed
+    
+    def player_draw(self):
+        pygame.draw.rect(screen, self.color, self.rect)
+    
+    def heal_player(self, heal):
+        self.health += heal
+    
+    def damage_player(self, damage):
+        self.health -= damage
+
+    
+    
+    
 
 def warrior():
     return {"class": "warrior", 
