@@ -79,7 +79,7 @@ class lobby_scene(scene_template):
                             self.player[0] = war
                         selected_class = self.player[0]
                         print("Selected warrior")
-                        print(self.player)
+                        print(self.player[0].player_class)
                     elif pygame.mouse.get_pos()[0] > screen.get_width()/2-50 and pygame.mouse.get_pos()[0] < screen.get_width()/2-50+100 and pygame.mouse.get_pos()[1] > screen.get_height()/2+screen.get_height()/4 and pygame.mouse.get_pos()[1] < screen.get_height()/2+screen.get_height()/4+50:
                         if self.player == []:
                             self.player.append(arc)
@@ -87,7 +87,7 @@ class lobby_scene(scene_template):
                             self.player[0] = arc
                         selected_class = self.player[0]
                         print("Selected archer")
-                        print(self.player)
+                        print(self.player[0].player_class)
                     elif pygame.mouse.get_pos()[0] > screen.get_width()/2-50+300 and pygame.mouse.get_pos()[0] < screen.get_width()/2-50+300+100 and pygame.mouse.get_pos()[1] > screen.get_height()/2+screen.get_height()/4 and pygame.mouse.get_pos()[1] < screen.get_height()/2+screen.get_height()/4+50:
                         if self.player == []:
                             self.player.append(mag)
@@ -95,7 +95,7 @@ class lobby_scene(scene_template):
                             self.player[0] = mag
                         selected_class = self.player[0]
                         print("Selected mage")
-                        print(self.player)
+                        print(self.player[0].player_class)
                     elif pygame.mouse.get_pos()[0] > screen.get_width()/2-50 and pygame.mouse.get_pos()[0] < screen.get_width()/2-50+100 and pygame.mouse.get_pos()[1] > screen.get_height()/2+screen.get_height()/4+100 and pygame.mouse.get_pos()[1] < screen.get_height()/2+screen.get_height()/4+150:
                         print("Starting game")
                         return level0_scene()
@@ -162,7 +162,7 @@ class level0_scene(scene_template):
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
-        text_surface_fps = a_font.render(f"pos: {plr.rect.x} {plr.rect.y}", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))

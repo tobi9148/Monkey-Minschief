@@ -1,9 +1,10 @@
 import pygame #Her importerer vi pygame
+import math
 from config import screen
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 player_size = 8*3
-player_speed = 1
+player_speed = 2
 
 class player_class(object):
     def __init__(self, player_class, health, damage, color):
@@ -27,15 +28,26 @@ class player_class(object):
         return cls("mage", 10, 15, (0, 0, 255))
     
     def player_movement(self):
+        self.velocity_x = 0
+        self.velocity_y = 0
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            self.rect.y -= self.speed
+            self.velocity_y = -self.speed
         if keys[pygame.K_s]:
-            self.rect.y += self.speed
+            self.velocity_y = self.speed
         if keys[pygame.K_a]:
-            self.rect.x -= self.speed
+            self.velocity_x = -self.speed
         if keys[pygame.K_d]:
-            self.rect.x += self.speed
+            self.velocity_x = self.speed
+    
+        self.total_velocity = pygame.math.Vector2(self.velocity_x, self.velocity_y)
+        if self.total_velocity.length() > 0:
+            self.total_velocity.x = self.velocity_x / player_speed * 2
+            self.total_velocity.y = self.velocity_y / player_speed * 2
+        
+        self.rect.move_ip(self.total_velocity.x, self.total_velocity.y)
+        print(self.total_velocity)
     
     def player_draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -45,25 +57,3 @@ class player_class(object):
     
     def damage_player(self, damage):
         self.health -= damage
-
-    
-    
-    
-
-def warrior():
-    return {"class": "warrior", 
-            "health" : 20,
-            "color": (255, 0, 0), 
-            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
-
-def archer():
-    return {"class": "archer", 
-            "health" : 20,
-            "color": (0, 255, 0), 
-            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
-
-def mage():
-    return {"class": "mage", 
-            "health" : 20,
-            "color": (0, 0, 255), 
-            "rect": (screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)}
