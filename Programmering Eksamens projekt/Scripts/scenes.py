@@ -1,14 +1,10 @@
 import pygame
 import player
-import config
+from config import a_font, screen, clock
 war = player.player_class.warrior()
 arc = player.player_class.archer()
 mag = player.player_class.mage()
 pygame.init()
-
-a_font = config.a_font
-screen = config.screen
-clock = config.clock
 
 class scene_template:
     def event_handler(self, event):
@@ -122,7 +118,7 @@ class lobby_scene(scene_template):
         for plr in self.player:
             plr.player_draw()
 
-        text_surface_fps = a_font.render(f"fps: {pygame.time.Clock.get_fps(clock):.0f}", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))
@@ -164,7 +160,7 @@ class level0_scene(scene_template):
             plr.player_draw()
             plr.player_movement()
         
-        text_surface_fps = a_font.render(f"fps: {pygame.time.Clock.get_fps(clock):.0f}", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
         text_surface_fps = a_font.render(f"pos: {plr.rect.x} {plr.rect.y}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
@@ -206,7 +202,7 @@ class level1_scene(scene_template):
         for plr in self.player: #Her tegnes playeren på banen
             pygame.draw.rect(screen, (plr["color"]), plr["rect"])
         
-        text_surface_fps = a_font.render(f"fps: {pygame.time.Clock.get_fps(clock):.0f}", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))
@@ -223,9 +219,6 @@ class death_scene(scene_template):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
                     return menu_scene()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_e:
-                    print(selected_class)
 
     def update(self):
         pass

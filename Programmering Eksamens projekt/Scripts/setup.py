@@ -1,12 +1,8 @@
 import pygame #Her importerer vi pygame
-from scenes import menu_scene
-from scenes import lobby_scene
-from scenes import level0_scene
-from scenes import level1_scene
+from config import screen, clock #Her importerer vi vores screen og clock
+from scenes import menu_scene, lobby_scene, level0_scene, level1_scene #Her importerer vi alle vores scener
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
-screen = pygame.display.set_mode((1280, 720)) #I den her linje laver vi et vindue med størrelsen 800x600
-clock = pygame.time.Clock() #Her laver vi er ur hvor vi kan holde øje med vores frames
 pygame.display.set_caption("Monkey Mischief") #I den her linje sætter vi titlen på
 
 fps = 120 #Vi laver er variabel som vil bestemme hvor mange frames vores spil skal køre med
