@@ -7,8 +7,9 @@ player_size = 8*3
 player_speed = 2
 
 class player_class(object):
-    def __init__(self, player_class, health, damage, color):
+    def __init__(self, player_class, max_health, health, damage, color):
         self.player_class = player_class
+        self.max_health = max_health
         self.health = health
         self.damage = damage
         self.color = color
@@ -17,15 +18,15 @@ class player_class(object):
     
     @classmethod
     def warrior(cls):
-        return cls("warrior", 20, 5, (255, 0, 0))
+        return cls("warrior", 20, 20, 5, (255, 0, 0))
 
     @classmethod
     def archer(cls):
-        return cls("archer", 15, 10, (0, 255, 0))
+        return cls("archer", 15, 15, 10, (0, 255, 0))
     
     @classmethod
     def mage(cls):
-        return cls("mage", 10, 15, (0, 0, 255))
+        return cls("mage", 10, 10, 15, (0, 0, 255))
     
     def player_movement(self):
         self.velocity_x = 0
@@ -47,7 +48,6 @@ class player_class(object):
             self.total_velocity.y = self.velocity_y / player_speed * 2
         
         self.rect.move_ip(self.total_velocity.x, self.total_velocity.y)
-        print(self.total_velocity)
     
     def player_draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -57,3 +57,6 @@ class player_class(object):
     
     def damage_player(self, damage):
         self.health -= damage
+    
+    def reset_position(self):
+        self.rect = pygame.rect.Rect(screen.get_width() / 2 - player_size / 2, screen.get_height() / 2 - player_size / 2, player_size, player_size)

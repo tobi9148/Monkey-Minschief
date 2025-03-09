@@ -77,6 +77,7 @@ class lobby_scene(scene_template):
                             self.player.append(war)
                         else:
                             self.player[0] = war
+                            self.player[0].reset_position()
                         selected_class = self.player[0]
                         print("Selected warrior")
                         print(self.player[0].player_class)
@@ -85,6 +86,7 @@ class lobby_scene(scene_template):
                             self.player.append(arc)
                         else:
                             self.player[0] = arc
+                            self.player[0].reset_position()
                         selected_class = self.player[0]
                         print("Selected archer")
                         print(self.player[0].player_class)
@@ -93,6 +95,7 @@ class lobby_scene(scene_template):
                             self.player.append(mag)
                         else:
                             self.player[0] = mag
+                            self.player[0].reset_position()
                         selected_class = self.player[0]
                         print("Selected mage")
                         print(self.player[0].player_class)
@@ -113,6 +116,10 @@ class lobby_scene(scene_template):
         mage_button = button(screen.get_width()/2-50+300, screen.get_height()/2+screen.get_height()/4, 100, 50, (0, 0, 255), "Mage", (0, 0, 255)).draw(screen)
         if self.player != []:
             start_button = button(screen.get_width()/2-50, screen.get_height()/2+screen.get_height()/4+100, 100, 50, (255, 255, 255), "Start", (255, 255, 255)).draw(screen)
+        
+        if self.player != []:
+                text_surface_damage_display = button(screen.get_width()/2-70-100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Damage: {self.player[0].damage}", (255, 255, 255)).draw(screen)
+                text_surface_health_display = button(screen.get_width()/2-70+100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Health: {self.player[0].health}", (255, 255, 255)).draw(screen)
         
     def render(self, screen):
         for plr in self.player:
@@ -137,6 +144,12 @@ class level0_scene(scene_template):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_z:
+                    self.player[0].damage_player(5)
+                    print({self.player[0].health})
+        if self.player[0].health <= 0:
+            return death_scene()
         if pygame.key.get_pressed()[pygame.K_x]:
             return death_scene()
         return self
@@ -210,8 +223,12 @@ class level1_scene(scene_template):
         screen.blit(text_surface_resolution, (0, 690))
 
 class death_scene(scene_template):
+    def __init__(self):
+        self.player = []
+        self.player.append(selected_class)
+        print(self.player)
+
     def event_handler(self, events):
-        pygame.key.set_repeat(1, 1)
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -221,7 +238,10 @@ class death_scene(scene_template):
                     return menu_scene()
 
     def update(self):
-        pass
+        if self.player[0].health == 0:
+            self.player[0].reset_position()
+            self.player[0].heal_player(self.player[0].max_health)
+            print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
 
     def render(self, screen):
         screen.fill((0, 0, 0))
