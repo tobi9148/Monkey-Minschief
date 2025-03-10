@@ -175,7 +175,7 @@ class level0_scene(scene_template):
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
-        text_surface_fps = a_font.render(f"pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))
@@ -187,12 +187,19 @@ class level1_scene(scene_template):
         self.player = []
         self.player.append(selected_class)
         print(self.player)
+        self.edge = None
 
     def event_handler(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_z:
+                    self.player[0].damage_player(5)
+                    print({self.player[0].health})
+        if self.player[0].health <= 0:
+            return death_scene()
         if pygame.key.get_pressed()[pygame.K_x]:
             return death_scene()
         return self
@@ -212,10 +219,13 @@ class level1_scene(scene_template):
         for tile in tile_left:
             tile.draw(screen)
 
-        for plr in self.player: #Her tegnes playeren på banen
-            pygame.draw.rect(screen, (plr["color"]), plr["rect"])
+        for plr in self.player:
+            plr.player_draw()
+            plr.player_movement()
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
+        screen.blit(text_surface_fps, (0, 600))
+        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))
