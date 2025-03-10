@@ -1,6 +1,8 @@
 import pygame #Her importerer vi pygame
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
+#git config pull.rebase false
+
 
 class Enemy(object):
 
@@ -9,5 +11,6 @@ class Enemy(object):
         self.skills = skills
         self.attack = attack
         self.expget = expget
+
     def move(self):
         pass
