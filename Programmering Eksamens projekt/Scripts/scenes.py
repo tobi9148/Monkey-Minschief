@@ -41,6 +41,14 @@ class tile_b():
         sprite = pygame.image.load(self.tile)
         screen.blit(sprite, (self.x, self.y))   
 
+class room_size():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def draw(self):
+        pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(self.x/2), screen.get_height()/2-(self.y/2), self.x, self.y), 1)
+
 class menu_scene(scene_template):
     def event_handler(self, events):
         for event in events:
@@ -162,9 +170,8 @@ class level0_scene(scene_template):
 
         tile_left = [tile_b(50, 0, "green_brick_l")]
 
-        edge = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(720/2), screen.get_height()/2-(480/2), 720, 480), 1)
-        side_increments = int(edge.height/24)
-        top_bottom_increments = edge.width/24
+        edge = room_size(720, 480)
+        edge.draw()
 
         for tile in tile_left:
             tile.draw(screen)
