@@ -1,6 +1,10 @@
 import pygame
+import random
 import player
 from config import a_font, screen, clock
+
+selected_class = None
+
 war = player.player_class.warrior()
 arc = player.player_class.archer()
 mag = player.player_class.mage()
@@ -13,6 +17,25 @@ class scene_template:
         pass
     def render(self, screen):
         pass
+
+death_messages = [
+    "Death is inevitable!",
+    "You play like an infant...",
+    "HE NEED SOME MILK!",
+    "My dead grandma could've done better!",
+    "Have you tried actually playing the game?",
+    "Death is temporary. Victory is permanent!",
+    "Tis but a scratch!",
+    "I had bigger plans for you...",
+    "Try not to do that again next time...",
+    "Yikes...",
+    "Unlock God Mode for $49.99.",
+    "Skill issue?",
+    "I swear it didn't hit me!",
+    "WTF?!",
+    "Horrible hitboxes!",
+    "Devs fix the game please..."
+]
 
 class button():
     def __init__(self, x, y, width, height, color, text, text_color):
@@ -250,8 +273,20 @@ class level1_scene(scene_template):
 class death_scene(scene_template):
     def __init__(self):
         self.player = []
-        self.player.append(selected_class)
+        if selected_class != None:
+            self.player.append(selected_class)
         print(self.player)
+
+        self.last_message = None
+        self.text_surface = self.generate_new_message()
+        print(self.last_message)
+    
+    def generate_new_message(self):
+        new_message = random.choice(death_messages)
+        while new_message == self.last_message:
+            new_message = random.choice(death_messages)
+        self.last_message = new_message
+        return a_font.render(f"{new_message} Press ENTER to restart", False, (255, 0, 0))
 
     def event_handler(self, events):
         for event in events:
@@ -263,12 +298,12 @@ class death_scene(scene_template):
                     return menu_scene()
 
     def update(self):
-        if self.player[0].health == 0:
-            self.player[0].reset_position()
-            self.player[0].heal_player(self.player[0].max_health)
-            print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
+        if self.player != []:
+            if self.player[0].health == 0:
+                self.player[0].reset_position()
+                self.player[0].heal_player(self.player[0].max_health)
+                print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
 
     def render(self, screen):
         screen.fill((0, 0, 0))
-        text_surface = a_font.render("Death is inevitable! Press ENTER to restart", False, (255, 0, 0))
-        screen.blit(text_surface, (screen.get_width() // 2 - text_surface.get_width() // 2, screen.get_height() // 2))
+        screen.blit(self.text_surface, (screen.get_width() // 2 - self.text_surface.get_width() // 2, screen.get_height() // 2))
