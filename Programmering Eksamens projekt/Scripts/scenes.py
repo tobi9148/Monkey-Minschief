@@ -275,18 +275,8 @@ class death_scene(scene_template):
         self.player = []
         if selected_class != None:
             self.player.append(selected_class)
-        print(self.player)
 
-        self.last_message = None
-        self.text_surface = self.generate_new_message()
-        print(self.last_message)
-    
-    def generate_new_message(self):
-        new_message = random.choice(death_messages)
-        while new_message == self.last_message:
-            new_message = random.choice(death_messages)
-        self.last_message = new_message
-        return a_font.render(f"{new_message} Press ENTER to restart", False, (255, 0, 0))
+        self.text_surface = a_font.render(f"{random.choice(death_messages)} Press ENTER to restart", False, (255, 0, 0))
 
     def event_handler(self, events):
         for event in events:
