@@ -5,6 +5,7 @@ pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følg
 
 player_size = 8*3
 player_speed = 2
+player_cooldown = 500
 
 class player_class(object):
     def __init__(self, player_class, max_health, health, damage, color):
@@ -15,6 +16,7 @@ class player_class(object):
         self.color = color
         self.rect = pygame.rect.Rect(screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)
         self.speed = player_speed
+        self.last_dmg_cooldown = 0
     
     @classmethod
     def warrior(cls):
@@ -76,7 +78,15 @@ class player_class(object):
         self.health += heal
     
     def damage_player(self, damage):
-        self.health -= damage
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_dmg_cooldown >= player_cooldown:
+            self.health -= damage
+            self.last_dmg_cooldown = current_time
+    
+    def update_dmg_cooldown(self):
+        if self.dmg_cooldown > 0:
+            self.dmg_cooldown -= 1
+            print(self.dmg_cooldown)
     
     def reset_position(self):
         self.rect = pygame.rect.Rect(screen.get_width() / 2 - player_size / 2, screen.get_height() / 2 - player_size / 2, player_size, player_size)
