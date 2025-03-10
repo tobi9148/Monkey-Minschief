@@ -45,9 +45,13 @@ class room_size():
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.rect = None
     
     def draw(self):
-        pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(self.x/2), screen.get_height()/2-(self.y/2), self.x, self.y), 1)
+        self.rect = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(self.x/2), screen.get_height()/2-(self.y/2), self.x, self.y), 1)
+
+    def get_rect(self):
+        return self.rect
 
 class menu_scene(scene_template):
     def event_handler(self, events):
@@ -172,13 +176,17 @@ class level0_scene(scene_template):
 
         edge = room_size(720, 480)
         edge.draw()
+        edge_rect = edge.get_rect()
 
         for tile in tile_left:
             tile.draw(screen)
 
         for plr in self.player:
             plr.player_draw()
-            plr.player_movement()
+            player_width, player_height = plr.get_size()
+            health_text = a_font.render(f"{plr.max_health} / {plr.health}", False, (255, 0, 0))
+            screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
+            plr.player_movement(edge_rect)
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))

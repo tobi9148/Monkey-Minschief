@@ -28,7 +28,7 @@ class player_class(object):
     def mage(cls):
         return cls("mage", 10, 10, 15, (0, 0, 255))
     
-    def player_movement(self):
+    def player_movement(self, room_rect):
         self.velocity_x = 0
         self.velocity_y = 0
 
@@ -47,10 +47,30 @@ class player_class(object):
             self.total_velocity.x = self.velocity_x / player_speed * 2
             self.total_velocity.y = self.velocity_y / player_speed * 2
         
-        self.rect.move_ip(self.total_velocity.x, self.total_velocity.y)
+        player_rect = self.rect.move(self.total_velocity.x, self.total_velocity.y)
+
+        if room_rect.contains(player_rect):
+            self.rect = player_rect
+        else:
+            if player_rect.left < room_rect.left:
+                self.rect.left = room_rect.left
+            elif player_rect.right > room_rect.right:
+                self.rect.right = room_rect.right
+            else:
+                self.rect.x += self.total_velocity.x
+
+            if player_rect.top < room_rect.top:
+                self.rect.top = room_rect.top
+            elif player_rect.bottom > room_rect.bottom:
+                self.rect.bottom = room_rect.bottom
+            else:
+                self.rect.y += self.total_velocity.y
     
     def player_draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
+    
+    def get_size(self):
+        return self.rect.size
     
     def heal_player(self, heal):
         self.health += heal
