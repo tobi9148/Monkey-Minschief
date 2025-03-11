@@ -16,6 +16,9 @@ class Enemy(object):
         self.speed = speed
         self.direction = pygame.Vector2(0, 0)
 
+    def draw(self, screen):
+        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 20)
+
 class EnemyController:
 
     def __init__(self, target):
@@ -47,6 +50,3 @@ class EnemyController:
 
         if v.length() <= 10:
             enemy.pos = pygame.Vector2(400, 100)
-
-def draw(screen, enemy):
-    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), 20)

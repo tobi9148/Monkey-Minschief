@@ -176,6 +176,8 @@ class level0_scene(scene_template):
         print(self.player)
         self.edge = room_size(720, 480)
 
+        self.enemies = [enemy.Enemy(100, [], 10, 50, (100, 100), 2)]
+
     def event_handler(self, events):
         for event in events:
             if event.type == pygame.QUIT:
@@ -212,6 +214,8 @@ class level0_scene(scene_template):
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
             plr.player_movement(self.edge_rect)
         
+        for emy in self.enemies:
+            emy.draw(screen)
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
