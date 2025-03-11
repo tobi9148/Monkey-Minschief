@@ -11,14 +11,6 @@ arc = player.player_class.archer()
 mag = player.player_class.mage()
 pygame.init()
 
-class scene_template:
-    def event_handler(self, event):
-        pass
-    def update(self):
-        pass
-    def render(self, screen):
-        pass
-
 death_messages = [
     "Death is inevitable!",
     "You play like an infant...",
@@ -38,6 +30,14 @@ death_messages = [
     "Devs fix the game please...",
     "I guess you weren't ready to rumble..."
 ]
+
+class scene_template:
+    def event_handler(self, event):
+        pass
+    def update(self):
+        pass
+    def render(self, screen):
+        pass
 
 class button():
     def __init__(self, x, y, width, height, color, text, text_color):
@@ -240,10 +240,10 @@ class death_scene(scene_template):
 
     def update(self):
         if self.player != []:
-            if self.player[0].health == 0:
-                self.player[0].reset_position()
-                self.player[0].heal_player(self.player[0].max_health)
-                print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
+            self.player[0].reset_position()
+            if self.player[0].health != self.player[0].max_health:
+                self.player[0].heal_player(self.player[0].max_health-self.player[0].health)
+            print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
 
     def render(self, screen):
         screen.fill((0, 0, 0))
