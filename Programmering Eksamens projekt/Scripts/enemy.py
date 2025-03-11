@@ -7,8 +7,8 @@ pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følg
 
 class Enemy(object):
 
-    def __init__(self, HP, skills, attack, expget):
-        self.HP = HP
+    def __init__(self, health, skills, attack, expget):
+        self.health = health
         self.skills = skills
         self.attack = attack
         self.expget = expget
@@ -44,4 +44,3 @@ class EnemyController:
 
         if v.length() <= 10:
             sprite.pos = pygame.Vector2(400, 100)
-    

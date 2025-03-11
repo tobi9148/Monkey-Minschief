@@ -4,7 +4,7 @@ from config import screen
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 player_size = 8*3
-player_speed = 2
+player_speed = 0.5
 player_cooldown = 500
 
 class player_class(object):

@@ -1,6 +1,6 @@
 import pygame #Her importerer vi pygame
 from config import screen, clock #Her importerer vi vores screen og clock
-from scenes import menu_scene, lobby_scene, level0_scene, level1_scene #Her importerer vi alle vores scener
+from scenes import menu_scene, lobby_scene, level0_scene #Her importerer vi alle vores scener
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 pygame.display.set_caption("Monkey Mischief") #I den her linje sætter vi titlen på

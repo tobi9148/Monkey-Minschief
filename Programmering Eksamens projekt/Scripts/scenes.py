@@ -1,6 +1,7 @@
 import pygame
 import random
 import player
+import enemy
 from config import a_font, screen, clock
 
 selected_class = None
@@ -34,7 +35,8 @@ death_messages = [
     "I swear it didn't hit me!",
     "WTF?!",
     "Horrible hitboxes!",
-    "Devs fix the game please..."
+    "Devs fix the game please...",
+    "I guess you weren't ready to rumble..."
 ]
 
 class button():
@@ -172,7 +174,7 @@ class level0_scene(scene_template):
         self.player = []
         self.player.append(selected_class)
         print(self.player)
-        self.edge = None
+        self.edge = room_size(720, 480)
 
     def event_handler(self, events):
         for event in events:
@@ -197,9 +199,8 @@ class level0_scene(scene_template):
 
         tile_left = [tile_b(50, 0, "green_brick_l")]
 
-        edge = room_size(720, 480)
-        edge.draw()
-        edge_rect = edge.get_rect()
+        self.edge.draw()
+        self.edge_rect = self.edge.get_rect()
 
         for tile in tile_left:
             tile.draw(screen)
@@ -209,61 +210,11 @@ class level0_scene(scene_template):
             player_width, player_height = plr.get_size()
             health_text = a_font.render(f"{plr.max_health} / {plr.health}", False, (255, 0, 0))
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
-            plr.player_movement(edge_rect)
+            plr.player_movement(self.edge_rect)
         
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
-        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
-        screen.blit(text_surface_fps, (0, 630))
-        text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
-        screen.blit(text_surface_mouse_pos, (0, 660))
-        text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
-        screen.blit(text_surface_resolution, (0, 690))
-
-class level1_scene(scene_template):
-    def __init__(self):
-        self.player = []
-        self.player.append(selected_class)
-        print(self.player)
-        self.edge = None
-
-    def event_handler(self, events):
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_z:
-                    self.player[0].damage_player(5)
-                    print({self.player[0].health})
-        if self.player[0].health <= 0:
-            return death_scene()
-        if pygame.key.get_pressed()[pygame.K_x]:
-            return death_scene()
-        return self
-    
-    def update(self):
-        pass
-
-    def render(self, screen):
-        screen.fill((0, 0, 0))
-
-        tile_left = [tile_b(50, 0, "green_brick_l")]
-
-        edge = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(720/2), screen.get_height()/2-(480/2), 720, 480), 1)
-        side_increments = int(edge.height/24)
-        top_bottom_increments = edge.width/24
-
-        for tile in tile_left:
-            tile.draw(screen)
-
-        for plr in self.player:
-            plr.player_draw()
-            plr.player_movement()
-        
-        text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
-        screen.blit(text_surface_fps, (0, 600))
-        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x}, {plr.rect.y})", False, (255, 255, 255))
+        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x+player_width/2:.0f}, {plr.rect.y+player_height/2:.0f})", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
         screen.blit(text_surface_mouse_pos, (0, 660))
