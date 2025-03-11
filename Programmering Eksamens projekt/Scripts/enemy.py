@@ -50,3 +50,26 @@ class EnemyController:
 
         if v.length() <= 10:
             enemy.pos = pygame.Vector2(400, 100)
+        else:enemy.pos += enemy.direction * enemy.speed
+        enemy_rect = enemy.pos
+        room_rect = pygame.Rect(0, 0, 800, 600)
+        
+        if room_rect.contains(enemy_rect):
+                self.rect = enemy_rect
+        else:
+            if enemy_rect.left < room_rect.left:
+                self.rect.left = room_rect.left
+            elif enemy_rect.right > room_rect.right:
+                self.rect.right = room_rect.right
+            else:
+                self.rect.x += self.total_velocity.x
+
+            if enemy_rect.top < room_rect.top:
+                self.rect.top = room_rect.top
+            elif enemy_rect.bottom > room_rect.bottom:
+                self.rect.bottom = room_rect.bottom
+            else:
+                self.rect.y += self.total_velocity.y
+
+def draw(screen, enemy):
+    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), 20)
