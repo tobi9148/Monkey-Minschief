@@ -67,7 +67,7 @@ class EnemyController:
             if enemy_rect.top < room_rect.top:
                 self.rect.top = room_rect.top
             elif enemy_rect.bottom > room_rect.bottom:
-                self.rect.bottom = room_rect.bottom
+                self.rect.bottom = room_rect.sbottom
             else:
                 self.rect.y += self.total_velocity.y
 
