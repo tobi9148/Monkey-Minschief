@@ -228,6 +228,9 @@ class level0_scene(scene_template):
         text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
         screen.blit(text_surface_resolution, (0, 690))
 
+class levelnext_scene(scene_template):
+    pass
+
 class death_scene(scene_template):
     def __init__(self):
         self.player = []
