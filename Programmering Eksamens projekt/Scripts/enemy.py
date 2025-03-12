@@ -7,7 +7,7 @@ pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følg
 
 class Enemy(object):
 
-    def __init__(self, health, skills, attack, expget, pos, speed):
+    def __init__(self, health, skills, attack, expget, pos, speed): #Giver enemien forskellige attributtes som den skal have i spillet
         self.health = health
         self.skills = skills
         self.attack = attack
@@ -16,7 +16,7 @@ class Enemy(object):
         self.speed = speed
         self.direction = pygame.Vector2(0, 0)
 
-    def draw(self, screen):
+    def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
         pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 20)
 
 class EnemyController:
