@@ -17,7 +17,7 @@ class Enemy(object):
         self.direction = pygame.Vector2(0, 0)
 
     def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
-        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 20)
+        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 8.3)
 
 class EnemyController:
 
@@ -72,4 +72,4 @@ class EnemyController:
                 self.rect.y += self.total_velocity.y
 
 def draw(screen, enemy):
-    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), 20)
+    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), 8.3)
