@@ -177,7 +177,7 @@ class level0_scene(scene_template):
         self.edge = room_size(720, 480)
         self.edge_rect = self.edge.get_rect()
 
-        self.enemies = [enemy.Enemy(100, [], 10, 50, (100, 100), 2)]
+        self.enemies = [enemy.Enemy(100, [], 10, 50, (400, 400), 2)]
 
     def event_handler(self, events):
         for event in events:
