@@ -175,6 +175,7 @@ class level0_scene(scene_template):
         self.player.append(selected_class)
         print(self.player)
         self.edge = room_size(720, 480)
+        self.edge_rect = self.edge.get_rect()
 
         self.enemies = [enemy.Enemy(100, [], 10, 50, (100, 100), 2)]
 
@@ -194,7 +195,8 @@ class level0_scene(scene_template):
         return self
     
     def update(self):
-        pass
+        for emy in self.enemies:
+            emy.enemy_movement(self.player[0], self.edge_rect)
 
     def render(self, screen):
         screen.fill((0, 0, 0))

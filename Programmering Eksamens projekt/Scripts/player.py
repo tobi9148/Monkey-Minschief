@@ -15,6 +15,7 @@ class player_class(object):
         self.damage = damage
         self.color = color
         self.rect = pygame.rect.Rect(screen.get_width()/2-player_size/2, screen.get_height()/2-player_size/2, player_size, player_size)
+        self.pos = pygame.Vector2(self.rect.center)
         self.speed = player_speed
         self.last_dmg_cooldown = 0
     
@@ -67,6 +68,8 @@ class player_class(object):
                 self.rect.bottom = room_rect.bottom
             else:
                 self.rect.y += self.total_velocity.y
+        
+        self.pos = pygame.Vector2(self.rect.center)
     
     def player_draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
