@@ -17,59 +17,31 @@ class Enemy(object):
         self.direction = pygame.Vector2(0, 0)
 
     def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
-        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 8.3)
+        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 8*3)
 
-class EnemyController:
+    def enemy_movement(self, target, room_rect):
+        # Calculate the direction vector towards the target (player)
+        direction_vector = target.pos - self.pos
+        length = direction_vector.length()
+        if length > 0:
+            direction_vector.x /= length
+            direction_vector.y /= length
 
-    def __init__(self, target):
-        self.direction = pygame.math.Vector2(1, 0)
-        self.target = target
+        # Move the enemy towards the target at a constant speed
+        move_vector = direction_vector * self.speed
+        new_pos = self.pos + move_vector
 
-    def update(self, enemy):
-        k = self.target.vel.magnitude() / enemy.speed
-
-        distance_to_target = (enemy.pos - self.target.pos).magnitude()
-
-        b_hat = self.target.vel
-        c_hat = enemy.pos - self.target.pos
-
-        CAB = b_hat.angle_to(c_hat)
-        ABC = math.asin(math.sin(CAB) * k)
-        ACB = math.pi - (CAB + ABC)
-
-        j = distance_to_target / math.sin(ACB)
-        a = j * math.sin(CAB)
-        b = j * math.sin(ABC)
-
-        time_to_collision = b / self.target.vel.magnitude() if self.target.vel.magnitude() > 0 else 1
-        collision_pos = self.target.pos + (self.target.vel * time_to_collision)
-
-        v = enemy.pos - collision_pos
-        if v.length() > 0:
-            enemy.direction = -v.normalize()
-
-        if v.length() <= 10:
-            enemy.pos = pygame.Vector2(400, 100)
-        else:enemy.pos += enemy.direction * enemy.speed
-        enemy_rect = enemy.pos
-        room_rect = pygame.Rect(0, 0, 800, 600)
-        
-        if room_rect.contains(enemy_rect):
-                self.rect = enemy_rect
-        else:
-            if enemy_rect.left < room_rect.left:
-                self.rect.left = room_rect.left
-            elif enemy_rect.right > room_rect.right:
-                self.rect.right = room_rect.right
+        # Ensure the enemy stays within the room_rect
+        if room_rect != None:
+            if room_rect.contains(pygame.Rect(new_pos.x, new_pos.y, 8*3, 8*3)):
+                self.pos = new_pos
             else:
-                self.rect.x += self.total_velocity.x
+                if new_pos.x < room_rect.left:
+                    self.pos.x = room_rect.left
+                elif new_pos.x > room_rect.right - 8*3:
+                    self.pos.x = room_rect.right - 8*3
 
-            if enemy_rect.top < room_rect.top:
-                self.rect.top = room_rect.top
-            elif enemy_rect.bottom > room_rect.bottom:
-                self.rect.bottom = room_rect.bottom
-            else:
-                self.rect.y += self.total_velocity.y
-
-def draw(screen, enemy):
-    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), 8.3)
+                if new_pos.y < room_rect.top:
+                    self.pos.y = room_rect.top
+                elif new_pos.y > room_rect.bottom - 8*3:
+                    self.pos.y = room_rect.bottom - 8*3
