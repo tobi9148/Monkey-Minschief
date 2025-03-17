@@ -36,13 +36,13 @@ class player_class(object):
         self.velocity_y = 0
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             self.velocity_y = -self.speed
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.velocity_y = self.speed
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.velocity_x = -self.speed
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.velocity_x = self.speed
     
         self.total_velocity = pygame.math.Vector2(self.velocity_x, self.velocity_y)
