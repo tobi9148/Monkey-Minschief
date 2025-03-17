@@ -19,7 +19,6 @@ class Enemy(object):
         self.direction = pygame.Vector2(0, 0)
         self.rect = pygame.rect.Rect(screen.get_width()/2-enemy_size/2, screen.get_height()/2-enemy_size, enemy_size * 2, enemy_size * 2)
         
-
     def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
         pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 15)
 
@@ -58,10 +57,9 @@ class Enemy(object):
         self.check_collision_and_damage(target)
         
     def check_collision_and_damage(self, player):
-        if self.rect.colliderect(player.rect):
+        # Calculate the distance between the centers of the player and enemy circles
+        distance = self.pos.distance_to(player.pos)
+        # Check if the distance is less than the sum of their radii
+        if distance < 15 + player.rect.width / 2:  # Assuming player.rect.width / 2 is the player's radius
             player.damage_player(self.damage)
             print(f"Player damage: {self.damage} player pos: {player.rect} enemy pos: {self.rect} Time: {pygame.time.get_ticks()}")
-            
-
-def draw(screen, enemy):
-    pygame.draw.circle(screen, (255, 0, 0), (int(enemy.pos.x), int(enemy.pos.y)), enemy_size)

@@ -202,7 +202,7 @@ class level0_scene(scene_template):
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(100, [], 10, 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(100, [], 1, 50, (400, 400), 1)]
 
     def event_handler(self, events):
         for event in events:
