@@ -202,7 +202,7 @@ class level0_scene(scene_template):
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(100, [], 1, 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(10, 10, [], 1, 50, (400, 400), 1)]
 
     def event_handler(self, events):
         for event in events:
@@ -212,6 +212,9 @@ class level0_scene(scene_template):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_z:
                     self.player[0].damage_player(5)
+                    print({self.player[0].health})
+                if event.key == pygame.K_k:
+                    self.player[0].heal_player(5)
                     print({self.player[0].health})
         if self.player[0].health <= 0:
             return death_scene()
@@ -255,11 +258,13 @@ class level0_scene(scene_template):
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
         text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
         text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
+        text_surface_plr_heal = a_font.render(f"Heal Player [k]", False, (255, 255, 255))
         text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
         screen.blit(text_surface_cntl, (0, 400))
         screen.blit(text_surface_suicide, (0, 430))
         screen.blit(text_surface_plr_dmg, (0, 460))
-        screen.blit(text_surface_dlt_emy, (0, 490))
+        screen.blit(text_surface_plr_heal, (0, 490))
+        screen.blit(text_surface_dlt_emy, (0, 520))
         text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
         screen.blit(text_surface_floors, (0, 570))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
@@ -291,7 +296,7 @@ class levelnext_scene(scene_template):
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(100, [], 10, 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(10, 10, [], (len(rooms)/2), 50, (400, 400), 1)]
 
     def event_handler(self, events):
         for event in events:
@@ -301,6 +306,9 @@ class levelnext_scene(scene_template):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_z:
                     self.player[0].damage_player(5)
+                    print({self.player[0].health})
+                if event.key == pygame.K_k:
+                    self.player[0].heal_player(5)
                     print({self.player[0].health})
         if self.player[0].health <= 0:
             return death_scene()
@@ -344,11 +352,13 @@ class levelnext_scene(scene_template):
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
         text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
         text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
+        text_surface_plr_heal = a_font.render(f"Heal Player [k]", False, (255, 255, 255))
         text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
         screen.blit(text_surface_cntl, (0, 400))
         screen.blit(text_surface_suicide, (0, 430))
         screen.blit(text_surface_plr_dmg, (0, 460))
-        screen.blit(text_surface_dlt_emy, (0, 490))
+        screen.blit(text_surface_plr_heal, (0, 490))
+        screen.blit(text_surface_dlt_emy, (0, 520))
         text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
         screen.blit(text_surface_floors, (0, 570))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
@@ -391,7 +401,7 @@ class death_scene(scene_template):
             self.player[0].reset_position()
             if self.player[0].health != self.player[0].max_health:
                 self.player[0].heal_player(self.player[0].max_health-self.player[0].health)
-            print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
+                print(f"Health: {self.player[0].health} / {self.player[0].max_health}")
 
     def render(self, screen):
         screen.fill((0, 0, 0))

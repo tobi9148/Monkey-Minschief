@@ -1,6 +1,6 @@
 import pygame #Her importerer vi pygame
 import math
-from config import screen
+from config import screen, a_font
 pygame.init() #Her initialiserer vi pygame og alle modulerne som nu skulle følge med
 
 #git config pull.rebase false
@@ -9,8 +9,9 @@ enemy_size = 30
 
 class Enemy(object):
 
-    def __init__(self, health, skills, damage, expget, pos, speed): #Giver enemien forskellige attributtes som den skal have i spillet
+    def __init__(self, health, max_health, skills, damage, expget, pos, speed): #Giver enemien forskellige attributtes som den skal have i spillet
         self.health = health
+        self.max_health = max_health
         self.skills = skills
         self.damage = damage
         self.expget = expget
@@ -21,6 +22,8 @@ class Enemy(object):
         
     def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
         pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 15)
+        health_text = a_font.render(f"{self.health} / {self.max_health}", False, (255, 0, 0))
+        screen.blit(health_text, (self.pos.x - health_text.get_width() / 2, self.pos.y+15))
 
     def enemy_movement(self, target, room_rect):
         # Calculate the direction vector towards the target (player)
@@ -62,4 +65,3 @@ class Enemy(object):
         # Check if the distance is less than the sum of their radii
         if distance < 15 + player.rect.width / 2:  # Assuming player.rect.width / 2 is the player's radius
             player.damage_player(self.damage)
-            print(f"Player damage: {self.damage} player pos: {player.rect} enemy pos: {self.rect} Time: {pygame.time.get_ticks()}")

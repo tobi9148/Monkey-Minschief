@@ -78,7 +78,10 @@ class player_class(object):
         return self.rect.size
     
     def heal_player(self, heal):
-        self.health += heal
+        if self.health < self.max_health:
+            self.health += heal
+            if self.health > self.max_health:
+                self.health = self.max_health
     
     def damage_player(self, damage):
         current_time = pygame.time.get_ticks()
