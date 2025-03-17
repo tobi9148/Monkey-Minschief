@@ -5,6 +5,8 @@ import enemy
 from config import a_font, screen, clock
 
 selected_class = None
+last_door_right = False
+rooms = []
 
 war = player.player_class.warrior()
 arc = player.player_class.archer()
@@ -66,6 +68,20 @@ class tile_b():
         sprite = pygame.image.load(self.tile)
         screen.blit(sprite, (self.x, self.y))   
 
+class next_level_door():
+    def __init__(self, x, y, color, right_door):
+        self.x = x
+        self.y = y
+        self.width = 8*4
+        self.height = 8*4
+        self.color = color
+        self.right_door = right_door
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def draw(self, screen):
+        self.rect = pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        return self
+
 class room_size():
     def __init__(self, x, y):
         self.x = x
@@ -74,9 +90,14 @@ class room_size():
     
     def draw(self):
         self.rect = pygame.draw.rect(screen, (255, 255, 255), (screen.get_width()/2-(self.x/2), screen.get_height()/2-(self.y/2), self.x, self.y), 1)
-
+    
     def get_rect(self):
         return self.rect
+
+def generate_random_room_size():
+    x = random.randint(600, 800)
+    y = random.randint(300, 600)
+    return room_size(x, y)
 
 class menu_scene(scene_template):
     def event_handler(self, events):
@@ -171,11 +192,15 @@ class lobby_scene(scene_template):
 
 class level0_scene(scene_template):
     def __init__(self):
+        global last_door_right
         self.player = []
         self.player.append(selected_class)
         print(self.player)
         self.edge = room_size(720, 480)
         self.edge_rect = self.edge.get_rect()
+
+        self.right_door = None
+        self.left_door = None
 
         self.enemies = [enemy.Enemy(100, [], 10, 50, (400, 400), 1)]
 
@@ -192,6 +217,14 @@ class level0_scene(scene_template):
             return death_scene()
         if pygame.key.get_pressed()[pygame.K_x]:
             return death_scene()
+        if pygame.key.get_pressed()[pygame.K_t]:
+            self.enemies = []
+        
+        if self.left_door and self.right_door:
+            if self.player[0].rect.colliderect(self.left_door.rect) or self.player[0].rect.colliderect(self.right_door.rect):
+                rooms.append(levelnext_scene)
+                return rooms[len(rooms)-1]()
+        
         return self
     
     def update(self):
@@ -212,13 +245,23 @@ class level0_scene(scene_template):
         for plr in self.player:
             plr.player_draw()
             player_width, player_height = plr.get_size()
-            health_text = a_font.render(f"{plr.max_health} / {plr.health}", False, (255, 0, 0))
+            health_text = a_font.render(f"{plr.health} / {plr.max_health}", False, (255, 0, 0))
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
             plr.player_movement(self.edge_rect)
         
         for emy in self.enemies:
             emy.draw(screen)
-        
+
+        text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
+        text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
+        text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
+        text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
+        screen.blit(text_surface_cntl, (0, 400))
+        screen.blit(text_surface_suicide, (0, 430))
+        screen.blit(text_surface_plr_dmg, (0, 460))
+        screen.blit(text_surface_dlt_emy, (0, 490))
+        text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
+        screen.blit(text_surface_floors, (0, 570))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
         text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x+player_width/2:.0f}, {plr.rect.y+player_height/2:.0f})", False, (255, 255, 255))
@@ -228,8 +271,100 @@ class level0_scene(scene_template):
         text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
         screen.blit(text_surface_resolution, (0, 690))
 
+        if self.enemies == []:
+            left_door_x = self.edge_rect.x + self.edge_rect.width // 4 - 8 * 2
+            right_door_x = self.edge_rect.x + self.edge_rect.width // 4 * 3 - 8 * 2
+            self.left_door = next_level_door(left_door_x, self.edge_rect.y, ((91, 60, 17)), False).draw(screen)
+            self.right_door = next_level_door(right_door_x, self.edge_rect.y, ((91, 60, 17)), True).draw(screen)
+
 class levelnext_scene(scene_template):
-    pass
+    def __init__(self):
+        self.player = []
+        self.player.append(selected_class)
+        print(self.player)
+        self.edge = generate_random_room_size()
+        self.edge_rect = self.edge.get_rect()
+
+        self.player[0].rect.x = screen.get_width() / 2 - self.player[0].rect.width / 2
+        self.player[0].rect.y = screen.get_height() / 2 + self.edge.y / 2 - self.player[0].rect.height
+
+        self.right_door = None
+        self.left_door = None
+
+        self.enemies = [enemy.Enemy(100, [], 10, 50, (400, 400), 1)]
+
+    def event_handler(self, events):
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_z:
+                    self.player[0].damage_player(5)
+                    print({self.player[0].health})
+        if self.player[0].health <= 0:
+            return death_scene()
+        if pygame.key.get_pressed()[pygame.K_x]:
+            return death_scene()
+        if pygame.key.get_pressed()[pygame.K_t]:
+            self.enemies = []
+        
+        if self.left_door and self.right_door:
+            if self.player[0].rect.colliderect(self.left_door.rect) or self.player[0].rect.colliderect(self.right_door.rect):
+                rooms.append(levelnext_scene)
+                return rooms[len(rooms)-1]()
+
+        return self
+    
+    def update(self):
+        for emy in self.enemies:
+            emy.enemy_movement(self.player[0], self.edge_rect)
+
+    def render(self, screen):
+        screen.fill((0, 0, 0))
+
+        tile_left = [tile_b(50, 0, "green_brick_l")]
+
+        self.edge.draw()
+        self.edge_rect = self.edge.get_rect()
+
+        for tile in tile_left:
+            tile.draw(screen)
+
+        for plr in self.player:
+            plr.player_draw()
+            player_width, player_height = plr.get_size()
+            health_text = a_font.render(f"{plr.health} / {plr.max_health}", False, (255, 0, 0))
+            screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
+            plr.player_movement(self.edge_rect)
+        
+        for emy in self.enemies:
+            emy.draw(screen)
+
+        text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
+        text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
+        text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
+        text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
+        screen.blit(text_surface_cntl, (0, 400))
+        screen.blit(text_surface_suicide, (0, 430))
+        screen.blit(text_surface_plr_dmg, (0, 460))
+        screen.blit(text_surface_dlt_emy, (0, 490))
+        text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
+        screen.blit(text_surface_floors, (0, 570))
+        text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
+        screen.blit(text_surface_fps, (0, 600))
+        text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x+player_width/2:.0f}, {plr.rect.y+player_height/2:.0f})", False, (255, 255, 255))
+        screen.blit(text_surface_fps, (0, 630))
+        text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
+        screen.blit(text_surface_mouse_pos, (0, 660))
+        text_surface_resolution = a_font.render(f"resolution: {screen.get_size()}", False, (255, 255, 255))
+        screen.blit(text_surface_resolution, (0, 690))
+
+        if self.enemies == []:
+            left_door_x = self.edge_rect.x + self.edge_rect.width // 4 - 8 * 2
+            right_door_x = self.edge_rect.x + self.edge_rect.width // 4 * 3 - 8 * 2
+            self.left_door = next_level_door(left_door_x, self.edge_rect.y, ((91, 60, 17)), False).draw(screen)
+            self.right_door = next_level_door(right_door_x, self.edge_rect.y, ((91, 60, 17)), True).draw(screen)
 
 class death_scene(scene_template):
     def __init__(self):
@@ -238,6 +373,9 @@ class death_scene(scene_template):
             self.player.append(selected_class)
 
         self.text_surface = a_font.render(f"{random.choice(death_messages)} Press ENTER to restart", False, (255, 0, 0))
+
+        if rooms != []:
+            rooms.clear()
 
     def event_handler(self, events):
         for event in events:
