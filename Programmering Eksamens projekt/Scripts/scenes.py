@@ -245,6 +245,13 @@ class level0_scene(scene_template):
         for tile in tile_left:
             tile.draw(screen)
 
+        text_surface_move = a_font.render(f"Move player:", False, (255/2, 255/2, 255/2))
+        text_surface_wasd = a_font.render(f"[W] [A] [S] [D]", False, (255/2, 255/2, 255/2))
+        text_surface_arrow = a_font.render(f"[UP] [DOWN] [LEFT] [RIGHT]", False, (255/2, 255/2, 255/2))
+        screen.blit(text_surface_move, (screen.get_width()/2-text_surface_move.get_width()/2, 400))
+        screen.blit(text_surface_wasd, (screen.get_width()/2-text_surface_wasd.get_width()/2, 430))
+        screen.blit(text_surface_arrow, (screen.get_width()/2-text_surface_arrow.get_width()/2, 460))
+
         for plr in self.player:
             plr.player_draw()
             player_width, player_height = plr.get_size()
