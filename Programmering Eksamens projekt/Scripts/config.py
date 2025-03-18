@@ -5,3 +5,4 @@ screen = pygame.display.set_mode((1280, 720)) #I den her linje laver vi et vindu
 clock = pygame.time.Clock() #Her laver vi er ur hvor vi kan holde øje med vores frames
 
 a_font = pygame.font.Font("Programmering Eksamens projekt/fonts/Grand9K Pixel.ttf", 20) #Her laver vi en font som vi kan bruge til at skrive tekst
+b_font = pygame.font.Font("Programmering Eksamens projekt/fonts/Grand9K Pixel.ttf", 26)

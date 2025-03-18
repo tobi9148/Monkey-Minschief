@@ -10,6 +10,7 @@ fps = 120 #Vi laver er variabel som vil bestemme hvor mange frames vores spil sk
 
 pygame.mixer.init()
 
+pygame.mixer.music.set_volume(0.4)  # 0.0 to 1.0
 pygame.mixer.music.load("Programmering Eksamens projekt\music\doom_Music.mp3")  # Replace with the path to your music file
 pygame.mixer.music.play(-1)  # -1 means that the music will loop indefinitely
 

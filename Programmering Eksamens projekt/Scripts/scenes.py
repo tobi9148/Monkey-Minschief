@@ -2,7 +2,7 @@ import pygame
 import random
 import player
 import enemy
-from config import a_font, screen, clock
+from config import a_font, b_font, screen, clock
 
 selected_class = None
 last_door_right = False
@@ -114,8 +114,10 @@ class menu_scene(scene_template):
 
     def render(self, screen):
         screen.fill((0, 0, 0))
-        text_surface = a_font.render("Press ENTER to start", False, (255, 255, 255)  )
+        text_surface = b_font.render("Press ENTER to start", False, (255, 255, 255))
         screen.blit(text_surface, (screen.get_width()/2-text_surface.get_width()/2, screen.get_height()/2-text_surface.get_height()/2))
+        text_surface_music = a_font.render("Music : Doom Eternal OST - The Only Thing They Fear Is You", False, (255, 255, 255))
+        screen.blit(text_surface_music, (screen.get_width()/2-text_surface_music.get_width()/2, screen.get_height()-text_surface_music.get_height()))
 
 class lobby_scene(scene_template):
     def __init__(self):
@@ -197,12 +199,14 @@ class level0_scene(scene_template):
         self.player.append(selected_class)
         print(self.player)
         self.edge = room_size(720, 480)
+        self.edge.draw()
         self.edge_rect = self.edge.get_rect()
 
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(10, 10, [], 1, 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(20, 20, [], 1, 50, (screen.get_width()/2-self.edge_rect.width/4, screen.get_height()/2), 1),
+                        enemy.Enemy(20, 20, [], 1, 50, (screen.get_width()/2+self.edge_rect.width/4, screen.get_height()/2), 1)]
 
     def event_handler(self, events):
         for event in events:
@@ -221,7 +225,7 @@ class level0_scene(scene_template):
                     mouse_pos = pygame.mouse.get_pos()
                     for emy in self.enemies:
                         distance = pygame.Vector2(mouse_pos).distance_to(emy.pos)
-                        if distance <= 15:  # Assuming the radius of the enemy's circle is 15
+                        if distance <= 30:  # Assuming the radius of the enemy's circle is 15
                             emy.take_damage(self.player[0].damage)  # Adjust damage value as needed
                             break
         if self.player[0].health <= 0:
@@ -239,8 +243,7 @@ class level0_scene(scene_template):
         return self
     
     def update(self):
-        for emy in self.enemies:
-            emy.enemy_movement(self.player[0], self.edge_rect)
+        pass
 
     def render(self, screen):
         screen.fill((0, 0, 0))
@@ -253,12 +256,16 @@ class level0_scene(scene_template):
         for tile in tile_left:
             tile.draw(screen)
 
+        text_surface_tutorial = b_font.render(f"Tutorial", False, (255/2, 255/2, 255/2))
         text_surface_move = a_font.render(f"Move player:", False, (255/2, 255/2, 255/2))
         text_surface_wasd = a_font.render(f"[W] [A] [S] [D]", False, (255/2, 255/2, 255/2))
         text_surface_arrow = a_font.render(f"[UP] [DOWN] [LEFT] [RIGHT]", False, (255/2, 255/2, 255/2))
+        text_surface_attack = a_font.render(f"Click on the enemy to attack", False, (255/2, 255/2, 255/2))
+        screen.blit(text_surface_tutorial, (screen.get_width()/2-text_surface_tutorial.get_width()/2, screen.get_height()/3-text_surface_tutorial.get_height()/2))
         screen.blit(text_surface_move, (screen.get_width()/2-text_surface_move.get_width()/2, 400))
         screen.blit(text_surface_wasd, (screen.get_width()/2-text_surface_wasd.get_width()/2, 430))
         screen.blit(text_surface_arrow, (screen.get_width()/2-text_surface_arrow.get_width()/2, 460))
+        screen.blit(text_surface_attack, (screen.get_width()/2-text_surface_attack.get_width()/2, 490))
 
         for plr in self.player:
             plr.player_draw()
@@ -305,6 +312,7 @@ class levelnext_scene(scene_template):
         self.player.append(selected_class)
         print(self.player)
         self.edge = generate_random_room_size()
+        self.edge.draw()
         self.edge_rect = self.edge.get_rect()
 
         self.player[0].rect.x = screen.get_width() / 2 - self.player[0].rect.width / 2
@@ -312,8 +320,18 @@ class levelnext_scene(scene_template):
 
         self.right_door = None
         self.left_door = None
-
-        self.enemies = [enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (400, 400), 1 + (len(rooms)/5))]
+        
+        enemy_amount = random.randint(1, 5)
+        self.enemies = []
+        for i in range(enemy_amount):
+            while True:
+                enemy_x = random.randint(self.edge_rect.left, self.edge_rect.right)
+                enemy_y = random.randint(self.edge_rect.top, self.edge_rect.bottom)
+                player_pos = pygame.Vector2(self.player[0].rect.center)
+                enemy_pos = pygame.Vector2(enemy_x, enemy_y)
+                if player_pos.distance_to(enemy_pos) >= 50:
+                    break
+            self.enemies.append(enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (enemy_x, enemy_y), 1 + (len(rooms)/10)))
 
     def event_handler(self, events):
         for event in events:
@@ -333,7 +351,7 @@ class levelnext_scene(scene_template):
                     mouse_pos = pygame.mouse.get_pos()
                     for emy in self.enemies:
                         distance = pygame.Vector2(mouse_pos).distance_to(emy.pos)
-                        if distance <= 15:  # Assuming the radius of the enemy's circle is 15
+                        if distance <= 30:  # Assuming the radius of the enemy's circle is 15
                             emy.take_damage(self.player[0].damage)  # Adjust damage value as needed
                             break
         if self.player[0].health <= 0:
