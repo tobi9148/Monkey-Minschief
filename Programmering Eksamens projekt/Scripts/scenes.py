@@ -313,7 +313,7 @@ class levelnext_scene(scene_template):
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(10, 10, [], (len(rooms)/2), 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (400, 400), 1)]
 
     def event_handler(self, events):
         for event in events:

@@ -22,7 +22,7 @@ class Enemy(object):
         
     def draw(self, screen): #Tegner hereftter enemien på vinduet (som en cirkel)
         pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 15)
-        health_text = a_font.render(f"{self.health} / {self.max_health}", False, (255, 0, 0))
+        health_text = a_font.render(f"{self.health:.0f} / {self.max_health:.0f}", False, (255, 0, 0))
         screen.blit(health_text, (self.pos.x - health_text.get_width() / 2, self.pos.y+15))
 
     def enemy_movement(self, target, room_rect): #Her laver vi en funktion som gør at enemien bevæger 
