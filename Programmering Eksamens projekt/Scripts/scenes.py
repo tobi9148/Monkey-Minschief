@@ -216,6 +216,13 @@ class level0_scene(scene_template):
                 if event.key == pygame.K_k:
                     self.player[0].heal_player(5)
                     print({self.player[0].health})
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    mouse_pos = pygame.mouse.get_pos()
+                    for emy in self.enemies:
+                        if emy.rect.collidepoint(mouse_pos):
+                            emy.take_damage(10)  # Adjust damage value as needed
+                            break
         if self.player[0].health <= 0:
             return death_scene()
         if pygame.key.get_pressed()[pygame.K_x]:

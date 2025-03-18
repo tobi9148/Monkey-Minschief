@@ -73,8 +73,9 @@ class Enemy(object):
             self.last_dmg_cooldown = current_time
 
     
-    def take_damage(self, damage):
-        self.health -= damage
+    def take_damage(self, amount):
+        self.health -= amount
         if self.health <= 0:
-            return True #Hvis enemien har 0 eller mindre liv, ville det betyde at den er død
-        return False #hvis enemien dør, bliver den fjernet fra listen over enemier i spillet
+            self.health = 0
+            # Handle enemy death if needed
+        print(f"Enemy health: {self.health}") 
