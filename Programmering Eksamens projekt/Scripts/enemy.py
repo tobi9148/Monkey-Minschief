@@ -37,25 +37,23 @@ class Enemy(object):
         move_vector = direction_vector * self.speed 
         new_pos = self.pos + move_vector
 
-        enemy_rect = self.rect.move(move_vector.x, move_vector.y)
         #sikre at enemien forbliver inden for rummet
-        if room_rect != None:
-            if room_rect.contains(pygame.Rect(new_pos.x, new_pos.y, enemy_size, enemy_size)):
-                self.pos = new_pos
-            else:
-                if enemy_rect.left < room_rect.left:
-                    self.rect.left = room_rect.left
-                elif enemy_rect.right > room_rect.right:
-                    self.rect.right = room_rect.right    
-                else:
-                    self.rect.x += move_vector.x
+        if room_rect is not None:
+            if new_pos.x <= room_rect.left:
+                new_pos.x = room_rect.left
+                direction_vector.x = 0  # Stop horizontal movement
+            elif new_pos.x >= room_rect.right:
+                new_pos.x = room_rect.right
+                direction_vector.x = 0  # Stop horizontal movement
 
-                if enemy_rect.top < room_rect.top:
-                    self.rect.top = room_rect.top
-                elif enemy_rect.bottom > room_rect.bottom:
-                    self.rect.bottom = room_rect.bottom
-                else:
-                    self.rect.y += move_vector.y
+            if new_pos.y <= room_rect.top:
+                new_pos.y = room_rect.top
+                direction_vector.y = 0  # Stop vertical movement
+            elif new_pos.y >= room_rect.bottom:
+                new_pos.y = room_rect.bottom
+                direction_vector.y = 0  # Stop vertical movement
+
+            self.pos = new_pos
 
         self.check_collision_and_damage(target)
         

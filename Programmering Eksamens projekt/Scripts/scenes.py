@@ -116,7 +116,7 @@ class menu_scene(scene_template):
         screen.fill((0, 0, 0))
         text_surface = b_font.render("Press ENTER to start", False, (255, 255, 255))
         screen.blit(text_surface, (screen.get_width()/2-text_surface.get_width()/2, screen.get_height()/2-text_surface.get_height()/2))
-        text_surface_music = a_font.render("Music : Doom Eternal OST - The Only Thing They Fear Is You", False, (255, 255, 255))
+        text_surface_music = a_font.render("Music : Mick Gordon - Doom Eternal OST - The Only Thing They Fear Is You", False, (255, 255, 255))
         screen.blit(text_surface_music, (screen.get_width()/2-text_surface_music.get_width()/2, screen.get_height()-text_surface_music.get_height()))
 
 class lobby_scene(scene_template):
@@ -261,11 +261,16 @@ class level0_scene(scene_template):
         text_surface_wasd = a_font.render(f"[W] [A] [S] [D]", False, (255/2, 255/2, 255/2))
         text_surface_arrow = a_font.render(f"[UP] [DOWN] [LEFT] [RIGHT]", False, (255/2, 255/2, 255/2))
         text_surface_attack = a_font.render(f"Click on the enemy to attack", False, (255/2, 255/2, 255/2))
+        text_surface_next = a_font.render(f"Walk to one of the brown doors to continue", False, (255/2, 255/2, 255/2))
         screen.blit(text_surface_tutorial, (screen.get_width()/2-text_surface_tutorial.get_width()/2, screen.get_height()/3-text_surface_tutorial.get_height()/2))
-        screen.blit(text_surface_move, (screen.get_width()/2-text_surface_move.get_width()/2, 400))
-        screen.blit(text_surface_wasd, (screen.get_width()/2-text_surface_wasd.get_width()/2, 430))
-        screen.blit(text_surface_arrow, (screen.get_width()/2-text_surface_arrow.get_width()/2, 460))
-        screen.blit(text_surface_attack, (screen.get_width()/2-text_surface_attack.get_width()/2, 490))
+        if self.enemies != []:
+            screen.blit(text_surface_move, (screen.get_width()/2-text_surface_move.get_width()/2, 400))
+            screen.blit(text_surface_wasd, (screen.get_width()/2-text_surface_wasd.get_width()/2, 430))
+            screen.blit(text_surface_arrow, (screen.get_width()/2-text_surface_arrow.get_width()/2, 460))
+            screen.blit(text_surface_attack, (screen.get_width()/2-text_surface_attack.get_width()/2, 520))
+        elif self.enemies == []:
+            screen.blit(text_surface_next, (screen.get_width()/2-text_surface_next.get_width()/2, 520))
+
 
         for plr in self.player:
             plr.player_draw()
@@ -320,16 +325,17 @@ class levelnext_scene(scene_template):
 
         self.right_door = None
         self.left_door = None
-        
+
+        margin = 20
         enemy_amount = random.randint(1, 5)
         self.enemies = []
         for i in range(enemy_amount):
             while True:
-                enemy_x = random.randint(self.edge_rect.left, self.edge_rect.right)
-                enemy_y = random.randint(self.edge_rect.top, self.edge_rect.bottom)
+                enemy_x = random.randint(self.edge_rect.left + margin, self.edge_rect.right - margin)
+                enemy_y = random.randint(self.edge_rect.top + margin, self.edge_rect.bottom - margin)
                 player_pos = pygame.Vector2(self.player[0].rect.center)
                 enemy_pos = pygame.Vector2(enemy_x, enemy_y)
-                if player_pos.distance_to(enemy_pos) >= 50:
+                if player_pos.distance_to(enemy_pos) >= 200:
                     break
             self.enemies.append(enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (enemy_x, enemy_y), 1 + (len(rooms)/10)))
 
