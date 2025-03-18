@@ -220,8 +220,9 @@ class level0_scene(scene_template):
                 if event.button == 1:  # Left mouse button
                     mouse_pos = pygame.mouse.get_pos()
                     for emy in self.enemies:
-                        if emy.rect.collidepoint(mouse_pos):
-                            emy.take_damage(10)  # Adjust damage value as needed
+                        distance = pygame.Vector2(mouse_pos).distance_to(emy.pos)
+                        if distance <= 15:  # Assuming the radius of the enemy's circle is 15
+                            emy.take_damage(self.player[0].damage)  # Adjust damage value as needed
                             break
         if self.player[0].health <= 0:
             return death_scene()
@@ -268,6 +269,8 @@ class level0_scene(scene_template):
         
         for emy in self.enemies:
             emy.draw(screen)
+            if emy.health <= 0:
+                self.enemies.remove(emy)
 
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
         text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
@@ -324,6 +327,14 @@ class levelnext_scene(scene_template):
                 if event.key == pygame.K_k:
                     self.player[0].heal_player(5)
                     print({self.player[0].health})
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    mouse_pos = pygame.mouse.get_pos()
+                    for emy in self.enemies:
+                        distance = pygame.Vector2(mouse_pos).distance_to(emy.pos)
+                        if distance <= 15:  # Assuming the radius of the enemy's circle is 15
+                            emy.take_damage(self.player[0].damage)  # Adjust damage value as needed
+                            break
         if self.player[0].health <= 0:
             return death_scene()
         if pygame.key.get_pressed()[pygame.K_x]:
@@ -362,6 +373,8 @@ class levelnext_scene(scene_template):
         
         for emy in self.enemies:
             emy.draw(screen)
+            if emy.health <= 0:
+                self.enemies.remove(emy)
 
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
         text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
