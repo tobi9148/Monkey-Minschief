@@ -176,8 +176,8 @@ class lobby_scene(scene_template):
             start_button = button(screen.get_width()/2-50, screen.get_height()/2+screen.get_height()/4+100, 100, 50, (255, 255, 255), "Start", (255, 255, 255)).draw(screen)
         
         if self.player != []:
-                text_surface_damage_display = button(screen.get_width()/2-70-100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Damage: {self.player[0].damage}", (255, 255, 255)).draw(screen)
-                text_surface_health_display = button(screen.get_width()/2-70+100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Health: {self.player[0].health}", (255, 255, 255)).draw(screen)
+                text_surface_damage_display = button(screen.get_width()/2-70-100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Damage: {self.player[0].damage:.0f}", (255, 255, 255)).draw(screen)
+                text_surface_health_display = button(screen.get_width()/2-70+100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Health: {self.player[0].health:.0f}", (255, 255, 255)).draw(screen)
         
     def render(self, screen):
         for plr in self.player:
