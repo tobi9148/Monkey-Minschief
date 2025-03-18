@@ -169,7 +169,7 @@ class lobby_scene(scene_template):
     def update(self):
         screen.fill((0, 0, 0))
 
-        warrior_button = button(screen.get_width()/2-50-300, screen.get_height()/2+screen.get_height()/4, 100, 50, (255, 0, 0), "Warrior", (255, 0, 0)).draw(screen)
+        warrior_button = button(screen.get_width()/2-50-300, screen.get_height()/2+screen.get_height()/4, 100, 50, (255, 155, 0), "Warrior", (255, 155, 0)).draw(screen)
         archer_button = button(screen.get_width()/2-50, screen.get_height()/2+screen.get_height()/4, 100, 50, (0, 255, 0), "Archer", (0, 255, 0)).draw(screen)
         mage_button = button(screen.get_width()/2-50+300, screen.get_height()/2+screen.get_height()/4, 100, 50, (0, 0, 255), "Mage", (0, 0, 255)).draw(screen)
         if self.player != []:
@@ -313,7 +313,7 @@ class levelnext_scene(scene_template):
         self.right_door = None
         self.left_door = None
 
-        self.enemies = [enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (400, 400), 1)]
+        self.enemies = [enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (400, 400), 1 + (len(rooms)/5))]
 
     def event_handler(self, events):
         for event in events:
@@ -325,8 +325,9 @@ class levelnext_scene(scene_template):
                     self.player[0].damage_player(5)
                     print({self.player[0].health})
                 if event.key == pygame.K_k:
-                    self.player[0].heal_player(5)
-                    print({self.player[0].health})
+                    if self.enemies == []:
+                        self.player[0].heal_player(self.player[0].max_health-self.player[0].health)
+                        print({self.player[0].health})
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left mouse button
                     mouse_pos = pygame.mouse.get_pos()
@@ -367,7 +368,7 @@ class levelnext_scene(scene_template):
         for plr in self.player:
             plr.player_draw()
             player_width, player_height = plr.get_size()
-            health_text = a_font.render(f"{plr.health} / {plr.max_health}", False, (255, 0, 0))
+            health_text = a_font.render(f"{plr.health:.0f} / {plr.max_health:.0f}", False, (255, 0, 0))
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
             plr.player_movement(self.edge_rect)
         

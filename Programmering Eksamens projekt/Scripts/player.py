@@ -21,7 +21,7 @@ class player_class(object):
     
     @classmethod
     def warrior(cls):
-        return cls("warrior", 20, 20, 5, (255, 0, 0))
+        return cls("warrior", 20, 20, 5, (255, 155, 0))
 
     @classmethod
     def archer(cls):

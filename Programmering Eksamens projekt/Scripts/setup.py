@@ -8,6 +8,11 @@ pygame.display.set_caption("Monkey Mischief") #I den her linje sætter vi titlen
 fps = 120 #Vi laver er variabel som vil bestemme hvor mange frames vores spil skal køre med
 
 
+pygame.mixer.init()
+
+pygame.mixer.music.load("Programmering Eksamens projekt\music\doom_Music.mp3")  # Replace with the path to your music file
+pygame.mixer.music.play(-1)  # -1 means that the music will loop indefinitely
+
 def main():
     current_scene = menu_scene()
     running = True
