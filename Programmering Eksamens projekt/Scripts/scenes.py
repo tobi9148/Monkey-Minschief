@@ -5,6 +5,10 @@ import enemy
 from config import a_font, b_font, screen, clock
 
 selected_class = None
+furthest_floor = 0
+currency = 15
+health_multi = 1.1
+damage_multi = 1.1
 last_door_right = False
 rooms = []
 
@@ -50,6 +54,7 @@ class button():
         self.color = color
         self.text = text
         self.text_color = text_color
+        self.rect = pygame.Rect(x, y, width, height)
     
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height), 5)
@@ -124,9 +129,20 @@ class menu_scene(scene_template):
 class lobby_scene(scene_template):
     def __init__(self):
         self.player = []
+        if selected_class != None:
+            self.player.append(selected_class)
+        self.currency = currency
+        self.health_multi = health_multi
+        self.damage_multi = damage_multi
+
+        self.quit_button = button(screen.get_width()-120, screen.get_height()-70, 100, 50, (255, 0, 0), "Quit", (255, 0, 0))
 
     def event_handler(self, events):
         global selected_class
+        global currency
+        global furthest_floor
+        global health_multi
+        global damage_multi
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -134,6 +150,23 @@ class lobby_scene(scene_template):
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if pygame.Rect(0, screen.get_height()/2, 200, 50).collidepoint(mouse_pos):
+                        print(f"Currency: {currency:.0f}")
+                    elif pygame.Rect(0, screen.get_height()/2+60, 200, 50).collidepoint(mouse_pos):
+                        if currency >= 5:
+                            currency -= 5
+                            print(f"Damage Multi: {damage_multi:.1f}")
+                            self.player[0].damage = self.player[0].damage * damage_multi
+                    elif pygame.Rect(0, screen.get_height()/2+120, 200, 50).collidepoint(mouse_pos):
+                        if currency >= 5:
+                            currency -= 5
+                            print(f"Health Multi: {health_multi:.1f}")
+                            self.player[0].health = self.player[0].health * health_multi
+                            self.player[0].max_health = self.player[0].max_health * health_multi
+                    elif self.quit_button.rect.collidepoint(mouse_pos):
+                        pygame.quit()
+                        exit()
                     if pygame.mouse.get_pos()[0] > screen.get_width()/2-50-300 and pygame.mouse.get_pos()[0] < screen.get_width()/2-50-300+100 and pygame.mouse.get_pos()[1] > screen.get_height()/2+screen.get_height()/4 and pygame.mouse.get_pos()[1] < screen.get_height()/2+screen.get_height()/4+50:
                         if self.player == []:
                             self.player.append(war)
@@ -172,21 +205,31 @@ class lobby_scene(scene_template):
 
     def update(self):
         screen.fill((0, 0, 0))
-
+        
         warrior_button = button(screen.get_width()/2-50-300, screen.get_height()/2+screen.get_height()/4, 100, 50, (255, 155, 0), "Warrior", (255, 155, 0)).draw(screen)
         archer_button = button(screen.get_width()/2-50, screen.get_height()/2+screen.get_height()/4, 100, 50, (0, 255, 0), "Archer", (0, 255, 0)).draw(screen)
         mage_button = button(screen.get_width()/2-50+300, screen.get_height()/2+screen.get_height()/4, 100, 50, (0, 0, 255), "Mage", (0, 0, 255)).draw(screen)
+        quit_button = button(screen.get_width()-120, screen.get_height()-70, 100, 50, (0, 0, 0), "Quit", (255, 255, 255)).draw(screen)
         if self.player != []:
             start_button = button(screen.get_width()/2-50, screen.get_height()/2+screen.get_height()/4+100, 100, 50, (255, 255, 255), "Start", (255, 255, 255)).draw(screen)
         
         if self.player != []:
-                text_surface_damage_display = button(screen.get_width()/2-70-100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Damage: {self.player[0].damage:.0f}", (255, 255, 255)).draw(screen)
-                text_surface_health_display = button(screen.get_width()/2-70+100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Health: {self.player[0].health:.0f}", (255, 255, 255)).draw(screen)
+                text_surface_damage_display = button(screen.get_width()/2-70-100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Damage: {self.player[0].damage:.1f}", (255, 255, 255)).draw(screen)
+                text_surface_health_display = button(screen.get_width()/2-70+100, screen.get_height()/2+50, 140, 50, (255, 255, 255), f"Health: {self.player[0].health:.1f}", (255, 255, 255)).draw(screen)
+                text_surface_currency_display = button(0, screen.get_height()/2, 240, 50, (255, 255, 255), f"Currency: {currency:.0f}", (255, 255, 255)).draw(screen)
+                text_surface_damage_multi = button(0, screen.get_height()/2+60, 240, 50, (255, 255, 255), f"Upgrade damage [5]", (255, 255, 255)).draw(screen)
+                text_surface_health_multi = button(0, screen.get_height()/2+120, 240, 50, (255, 255, 255), f"Upgrade health [5]", (255, 255, 255)).draw(screen)
         
     def render(self, screen):
         for plr in self.player:
             plr.player_draw()
-
+        if self.player != []:
+            text_surface_dmg_multi = a_font.render(f"damage multi: {self.player[0].damage/self.player[0].base_damage:.1f}", False, (255, 255, 255))
+            screen.blit(text_surface_dmg_multi, (0, 540))
+            text_surface_hlth_multi = a_font.render(f"health multi: {self.player[0].health/self.player[0].base_health:.1f}", False, (255, 255, 255))
+            screen.blit(text_surface_hlth_multi, (0, 570))
+        text_surface_f_floor = a_font.render(f"furthest floor: {furthest_floor}", False, (255, 255, 255))
+        screen.blit(text_surface_f_floor, (0, 600))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 630))
         text_surface_mouse_pos = a_font.render(f"mouse pos: {pygame.mouse.get_pos()}", False, (255, 255, 255))
@@ -248,6 +291,8 @@ class level0_scene(scene_template):
         pass
 
     def render(self, screen):
+        global currency
+        global furthest_floor
         screen.fill((0, 0, 0))
 
         tile_left = [tile_b(50, 0, "green_brick_l")]
@@ -277,13 +322,13 @@ class level0_scene(scene_template):
         for plr in self.player:
             plr.player_draw()
             player_width, player_height = plr.get_size()
-            health_text = a_font.render(f"{plr.health} / {plr.max_health}", False, (255, 0, 0))
+            health_text = a_font.render(f"{plr.health:.1f} / {plr.max_health:.1f}", False, (255, 0, 0))
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
             plr.player_movement(self.edge_rect)
         
         for emy in self.enemies:
             emy.draw(screen)
-            if emy.health <= 0:
+            if emy.health <= 0.0:
                 self.enemies.remove(emy)
 
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
@@ -291,11 +336,16 @@ class level0_scene(scene_template):
         text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
         text_surface_plr_heal = a_font.render(f"Heal Player [k]", False, (255, 255, 255))
         text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
-        screen.blit(text_surface_cntl, (0, 400))
-        screen.blit(text_surface_suicide, (0, 430))
-        screen.blit(text_surface_plr_heal, (0, 460))
+        screen.blit(text_surface_cntl, (0, screen.get_height()/2))
+        screen.blit(text_surface_suicide, (0, screen.get_height()/2+30))
+        screen.blit(text_surface_plr_heal, (0, screen.get_height()/2+60))
+        
+        text_surface_currency = a_font.render(f"currency: {currency}", False, (255, 255, 255))
+        screen.blit(text_surface_currency, (0, 510))
         text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
-        screen.blit(text_surface_floors, (0, 570))
+        screen.blit(text_surface_floors, (0, 540))
+        text_surface_f_floor = a_font.render(f"furthest floor: {furthest_floor}", False, (255, 255, 255))
+        screen.blit(text_surface_f_floor, (0, 570))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
         text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x+player_width/2:.0f}, {plr.rect.y+player_height/2:.0f})", False, (255, 255, 255))
@@ -325,6 +375,8 @@ class levelnext_scene(scene_template):
 
         self.right_door = None
         self.left_door = None
+        global currency
+        self.currency = currency
 
         margin = 20
         enemy_amount = random.randint(1, 5)
@@ -337,9 +389,10 @@ class levelnext_scene(scene_template):
                 enemy_pos = pygame.Vector2(enemy_x, enemy_y)
                 if player_pos.distance_to(enemy_pos) >= 200:
                     break
-            self.enemies.append(enemy.Enemy(10 * (len(rooms)/3), 10 * (len(rooms)/3), [], (len(rooms)/2), 50, (enemy_x, enemy_y), 1 + (len(rooms)/10)))
+            self.enemies.append(enemy.Enemy(10 * (len(rooms)/3.1), 10 * (len(rooms)/3.1), [], (len(rooms)/2), 50, (enemy_x, enemy_y), 1 + (len(rooms)/10)))
 
     def event_handler(self, events):
+        global currency
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -379,6 +432,10 @@ class levelnext_scene(scene_template):
             emy.enemy_movement(self.player[0], self.edge_rect)
 
     def render(self, screen):
+        global currency
+        global furthest_floor
+        if len(rooms) > furthest_floor:
+            furthest_floor = len(rooms)
         screen.fill((0, 0, 0))
 
         tile_left = [tile_b(50, 0, "green_brick_l")]
@@ -392,25 +449,33 @@ class levelnext_scene(scene_template):
         for plr in self.player:
             plr.player_draw()
             player_width, player_height = plr.get_size()
-            health_text = a_font.render(f"{plr.health:.0f} / {plr.max_health:.0f}", False, (255, 0, 0))
+            health_text = a_font.render(f"{plr.health:.1f} / {plr.max_health:.1f}", False, (255, 0, 0))
             screen.blit(health_text, (plr.rect.x-health_text.get_width()/2+player_width/2,plr.rect.y+player_height+2))
             plr.player_movement(self.edge_rect)
         
         for emy in self.enemies:
             emy.draw(screen)
-            if emy.health <= 0:
+            if emy.health <= 0.0:
                 self.enemies.remove(emy)
+                global currency
+                currency += 1
+                print(f"Currency: {currency:.0f}")
 
         text_surface_cntl = a_font.render(f"Controls:", False, (255, 255, 255))
         text_surface_suicide = a_font.render(f"Suicide [x]", False, (255, 255, 255))
         text_surface_plr_dmg = a_font.render(f"Damage Player [z]", False, (255, 255, 255))
         text_surface_plr_heal = a_font.render(f"Heal Player [k]", False, (255, 255, 255))
         text_surface_dlt_emy = a_font.render(f"Remove all enemies [t]", False, (255, 255, 255))
-        screen.blit(text_surface_cntl, (0, 400))
-        screen.blit(text_surface_suicide, (0, 430))
-        screen.blit(text_surface_plr_heal, (0, 460))
+        screen.blit(text_surface_cntl, (0, screen.get_height()/2))
+        screen.blit(text_surface_suicide, (0, screen.get_height()/2+30))
+        screen.blit(text_surface_plr_heal, (0, screen.get_height()/2+60))
+
+        text_surface_currency = a_font.render(f"currency: {currency}", False, (255, 255, 255))
+        screen.blit(text_surface_currency, (0, 510))
         text_surface_floors = a_font.render(f"floor: {len(rooms)}", False, (255, 255, 255))
-        screen.blit(text_surface_floors, (0, 570))
+        screen.blit(text_surface_floors, (0, 540))
+        text_surface_f_floor = a_font.render(f"furthest floor: {furthest_floor}", False, (255, 255, 255))
+        screen.blit(text_surface_f_floor, (0, 570))
         text_surface_fps = a_font.render(f"fps: {clock.get_fps():.0f}", False, (255, 255, 255))
         screen.blit(text_surface_fps, (0, 600))
         text_surface_fps = a_font.render(f"player_pos: ({plr.rect.x+player_width/2:.0f}, {plr.rect.y+player_height/2:.0f})", False, (255, 255, 255))
@@ -428,12 +493,14 @@ class levelnext_scene(scene_template):
 
 class death_scene(scene_template):
     def __init__(self):
+        global furthest_floor
         self.player = []
         if selected_class != None:
             self.player.append(selected_class)
 
         self.text_surface = a_font.render(f"{random.choice(death_messages)} Press ENTER to restart", False, (255, 0, 0))
-
+        if len(rooms) > furthest_floor:
+            furthest_floor = len(rooms)
         if rooms != []:
             rooms.clear()
 
@@ -444,7 +511,7 @@ class death_scene(scene_template):
                 exit()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
-                    return menu_scene()
+                    return lobby_scene()
 
     def update(self):
         if self.player != []:

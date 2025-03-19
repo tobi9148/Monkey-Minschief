@@ -8,7 +8,7 @@ player_speed = 0.5
 player_cooldown = 500
 
 class player_class(object):
-    def __init__(self, player_class, max_health, health, damage, color):
+    def __init__(self, player_class, max_health, health, base_health, damage, base_damage, color):
         self.player_class = player_class
         self.max_health = max_health
         self.health = health
@@ -18,18 +18,20 @@ class player_class(object):
         self.pos = pygame.Vector2(self.rect.center)
         self.speed = player_speed
         self.last_dmg_cooldown = 0
+        self.base_health = base_health
+        self.base_damage = base_damage
     
     @classmethod
     def warrior(cls):
-        return cls("warrior", 20, 20, 5, (255, 155, 0))
+        return cls("warrior", 20, 20, 20, 5, 5, (255, 155, 0))
 
     @classmethod
     def archer(cls):
-        return cls("archer", 15, 15, 10, (0, 255, 0))
+        return cls("archer", 15, 15, 15, 10, 10, (0, 255, 0))
     
     @classmethod
     def mage(cls):
-        return cls("mage", 10, 10, 15, (0, 0, 255))
+        return cls("mage", 10, 10, 10, 15, 15, (0, 0, 255))
     
     def player_movement(self, room_rect):
         self.velocity_x = 0
