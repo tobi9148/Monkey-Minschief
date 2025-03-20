@@ -12,9 +12,9 @@ volume = 0.4
 
 pygame.mixer.init()
 
-pygame.mixer.music.set_volume(volume)  # 0.0 to 1.0
-pygame.mixer.music.load("Programmering Eksamens projekt\music\doom_Music.mp3")  # Replace with the path to your music file
-pygame.mixer.music.play(-1)  # -1 means that the music will loop indefinitely
+pygame.mixer.music.set_volume(volume)
+pygame.mixer.music.load("Programmering Eksamens projekt\music\doom_Music.mp3")
+pygame.mixer.music.play(-1)
 
 def main():
     global volume
