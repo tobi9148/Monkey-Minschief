@@ -63,13 +63,6 @@ class Enemy(object):
         #tjekker om afstanden er mindre end summen af deres radian
         if distance < 15 + player.rect.width / 2: #Der antages at player.rect.width / 2 er playerens radius
             player.damage_player(self.damage)  # Hvis de overlapper, tager vi skade
-
-    def damage_player(self, damage):
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_dmg_cooldown >= enemy_cooldown:
-            self.health -= damage
-            self.last_dmg_cooldown = current_time
-
     
     def take_damage(self, amount):
         self.health -= amount
