@@ -91,10 +91,5 @@ class player_class(object):
             self.health -= damage
             self.last_dmg_cooldown = current_time
     
-    def update_dmg_cooldown(self):
-        if self.dmg_cooldown > 0:
-            self.dmg_cooldown -= 1
-            print(self.dmg_cooldown)
-    
     def reset_position(self):
         self.rect = pygame.rect.Rect(screen.get_width() / 2 - player_size / 2, screen.get_height() / 2 - player_size / 2, player_size, player_size)
